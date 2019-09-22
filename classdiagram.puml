@@ -1,0 +1,86 @@
+@startuml
+
+package facade {
+
+    Interface PresentationServices
+    Abstract Class Presentation
+    Presentation : canStart()
+    Presentation : canStop()
+    Presentation .left.|> PresentationServices
+    SimplePresentation -up-|> Presentation
+}
+
+
+package bridge {
+
+    package style {
+        Interface Style
+        Level1 -up-|> Style
+        Level2 -up-|> Style
+        Level3 -up-|> Style
+        Level4 -up-|> Style
+
+    }
+
+    package composite {
+
+        Abstract Class Item
+
+        Text .up.|> Item
+        Figure .up.|> Item
+        Table .up.|> Item
+        Composite .up.|> Item
+        Composite -up-> "*" Item
+
+        Item -right-> Style
+
+    }
+
+}
+
+package iterator {
+
+    Interface SlideShow
+    Interface Iterator
+
+    SlideShowImpl .up.|> SlideShow
+    SlideIterator -up-|> Iterator
+    Slide -down-> "*" Item
+    SlideShowImpl -right-> SlideIterator
+    SlideShowImpl --> "*" Slide
+
+    Slide : canNavigatePrevious()
+    Slide : canNavigateNext()
+
+}
+
+package strategy {
+
+    Interface PresentationStartRule
+    PresentationStartRule : canStart()
+    Presentation -right-> PresentationStartRule
+    PresentationStartRuleImpl .up.|> PresentationStartRule
+
+    Interface PresentationStopRule
+    PresentationStopRule : canStop()
+    Presentation -right-> PresentationStopRule
+    PresentationStopRuleImpl .up.|> PresentationStopRule
+
+    Interface NextSlideRule
+    NextSlideRule : canNavigate()
+    Slide -right-> NextSlideRule
+    NextSlideRuleImpl .up.|> NextSlideRule
+
+    Interface PreviousSlideRule
+    PreviousSlideRule : canNavigate()
+    Slide -right-> PreviousSlideRule
+    PreviousSlideRuleImpl .up.|> PreviousSlideRule
+
+
+}
+
+
+SimplePresentation --> SlideShow
+SimplePresentation --> Iterator
+
+@enduml
