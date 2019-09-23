@@ -4,9 +4,11 @@ package facade {
 
     Interface PresentationServices
     Abstract Class Presentation
-    Presentation : canStart()
-    Presentation : canStop()
-    Presentation .left.|> PresentationServices
+    PresentationServices : startPresentation()
+    PresentationServices : stopPresentation()
+    PresentationServices : nextSlide()
+    PresentationServices : previousSlide()
+    Presentation .up.|> PresentationServices
     SimplePresentation -up-|> Presentation
 }
 
