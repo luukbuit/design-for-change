@@ -51,11 +51,10 @@ package iterator {
     SlideList -left-> SlideIterator
     SlideList --> "*" Slide
 
-    Slide : canNavigatePrevious()
-    Slide : canNavigateNext()
-
     SlideShow : next()
-    SlideShow : previous()
+    SlideShow : hasNext()
+    SlideShow : next()
+    SlideShow : hasPrevious()
 
     SlideList : getIterator()
 
