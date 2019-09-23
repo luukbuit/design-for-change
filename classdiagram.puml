@@ -60,8 +60,9 @@ package iterator {
 
     SlideList : getIterator()
 
-    Slide -left-> "0..1" Transition : "    next"
-    Slide -left-> "0..1" Transition : "    previous"
+    Slide -left-> Transition : next
+    Slide -left-> Transition : previous
+    Transition --> Slide : target
 
 }
 
