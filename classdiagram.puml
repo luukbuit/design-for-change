@@ -1,13 +1,11 @@
 @startuml
-
 package facade {
 
     Interface PresentationServices
     Abstract Class Presentation
     PresentationServices : startPresentation()
     PresentationServices : stopPresentation()
-    PresentationServices : nextSlide()
-    PresentationServices : previousSlide()
+    PresentationServices : navigateSlide(direction)
     Presentation .up.|> PresentationServices
     SimplePresentation -up-|> Presentation
 }
@@ -40,10 +38,17 @@ package bridge {
 
 }
 
+
+
 package iterator {
 
     Interface SlideShow
     Interface Iterator
+
+    Iterator : first()
+    Iterator : next(direction)
+
+
 
     SlideShowImpl .up.|> SlideShow
     SlideIterator -up-|> Iterator
@@ -53,45 +58,43 @@ package iterator {
     SlideList -left-> SlideIterator
     SlideList --> "*" Slide
 
-    SlideShow : next()
-    SlideShow : hasNext()
-    SlideShow : next()
-    SlideShow : hasPrevious()
+    SlideShow : navigateSlide(direction)
 
     SlideList : getIterator()
 
-    Slide -left-> Transition : next
-    Slide -left-> Transition : previous
-    Transition --> Slide : target
+
+
 
 }
 
 package strategy {
 
-    Interface PresentationStartRule
-    PresentationStartRule : canStart()
-    Presentation -right-> PresentationStartRule
-    PresentationStartRuleImpl .up.|> PresentationStartRule
+    abstract class SlideNavigateRule
+    SlideNavigateRule : canNavigate(from,to)
+    SlideShowImpl -right-> SlideNavigateRule
 
-    Interface PresentationStopRule
-    PresentationStopRule : canStop()
-    Presentation -right-> PresentationStopRule
-    PresentationStopRuleImpl .up.|> PresentationStopRule
+    class LiniairSlideNavigateRule
+    LiniairSlideNavigateRule -up-|> SlideNavigateRule 
 
-    Interface NextSlideRule
-    NextSlideRule : canNavigate()
-    SlideShowImpl -right-> NextSlideRule
-    NextSlideRuleImpl .up.|> NextSlideRule
+    class CubicSlideNavigateRule
+    CubicSlideNavigateRule-up-|> SlideNavigateRule 
 
-    Interface PreviousSlideRule
-    PreviousSlideRule : canNavigate()
-    SlideShowImpl -right-> PreviousSlideRule
-    PreviousSlideRuleImpl .up.|> PreviousSlideRule
+    class GridSlideNavigateRule
+    GridSlideNavigateRule-up-|> SlideNavigateRule 
+
+    Interface Transition
+    Transition : Start()
+
+    SlideShowImpl -right-> "*" Transition
+
+    SlideTransition -up-|> Transition
+    TwistTransition -up-|> Transition
+    fadeTransition -up-|> Transition
+
 
 
 }
 
 
 SimplePresentation --> SlideShow
-
 @enduml
